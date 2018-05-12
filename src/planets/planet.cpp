@@ -15,14 +15,18 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
     this->orbit_speed = orbit_speed;
     this->name = std::move(name);
 
-    rotation = 0;
+    rotation = 0; //Utils::random_range_float(0, 2*PI);
+    distance = 2*PI*orbit_radius;
+
     position.x = std::cos(rotation) * orbit_radius;
     position.y = 0;
     position.z = std::sin(rotation) * orbit_radius;
 }
 
 void Planet::update() {
-    rotation += orbit_speed;
+    if (orbit_speed <= 0 && distance <= 0) return;
+
+    rotation += orbit_speed / distance;
 
     position.x = std::cos(rotation) * orbit_radius;
     position.y = 0;
@@ -35,7 +39,7 @@ void Planet::draw(DrawMode mode) {
             glTranslatef(position.x, position.y, position.z);
             glScalef(radius, radius, radius);
             glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(texture_id));
-            Utils::setMaterial(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f);
+            Utils::set_material(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f);
             Shapes::drawSphere();
             break;
         case ORBIT:
@@ -47,6 +51,18 @@ void Planet::draw(DrawMode mode) {
         case ZOOMED_IN:
             break;
         case SURFACE:
+            glColor3f(1,1,1);
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, texture_id);
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
+            glTexCoord2f(0, 1); glVertex3f(-1, 1, 0);
+            glTexCoord2f(1, 1); glVertex3f(1, 1, 0);
+            glTexCoord2f(1, 0); glVertex3f(1, -1, 0);
+            glEnd();
+
+            glDisable(GL_TEXTURE_2D);
             break;
     }
 }

@@ -5,16 +5,19 @@
 #include <helpers/shapes.hpp>
 #include <helpers/textures.hpp>
 #include "solar_system.hpp"
+#include "saturn.hpp"
 
 void SolarSystem::init() {
-   	planets.push_back(new Planet(Texture::SATURN_TEXTURE,    1.0,  0.0, 0.0, "Saturn"));
-    planets.push_back(new Planet(Texture::DIONE_TEXTURE,     0.55, 1.5, 0.1, "Dione"));
-    planets.push_back(new Planet(Texture::ENCELADUS_TEXTURE, 0.25, 1.0, 0.1, "Enceladus"));
-    planets.push_back(new Planet(Texture::IAPETUS_TEXTURE,   0.5,  10.0, 0.1, "Iapetus"));
-    planets.push_back(new Planet(Texture::MIMAS_TEXTURE,     0.2,  0.9, 0.1, "Mimas"));
-    planets.push_back(new Planet(Texture::RHEA_TEXTURE,      0.7,  2.5, 0.1, "Rhea"));
-    planets.push_back(new Planet(Texture::TETHYS_TEXTURE,    0.5,  1.4, 0.1, "Tethys"));
-    planets.push_back(new Planet(Texture::TITAN_TEXTURE,     0.8,  5.0, 0.1, "Titan"));
+   	planets.push_back(new Saturn());
+    planets.push_back(new Planet(Texture::DIONE_TEXTURE,     0.55, 5.5,  0.0027, "Dione"));
+    planets.push_back(new Planet(Texture::ENCELADUS_TEXTURE, 0.25, 3.0,  0.0014, "Enceladus"));
+    planets.push_back(new Planet(Texture::IAPETUS_TEXTURE,   0.5,  21.0, 0.079, "Iapetus"));
+    planets.push_back(new Planet(Texture::MIMAS_TEXTURE,     0.2,  1.9,  0.0009, "Mimas"));
+    planets.push_back(new Planet(Texture::RHEA_TEXTURE,      0.7,  6.5,  0.0045, "Rhea"));
+    planets.push_back(new Planet(Texture::TETHYS_TEXTURE,    0.5,  4.4,  0.0019, "Tethys"));
+    planets.push_back(new Planet(Texture::TITAN_TEXTURE,     0.8,  8.0,  0.016, "Titan"));
+
+    selected_planet = planets[1];
 }
 
 void SolarSystem::update() {
@@ -41,11 +44,11 @@ void SolarSystem::draw_realistic_view() {
 	glColor3f(1.0f, 1.0f, 1.0f);
 
 	// Planets
-	glPushMatrix();
-	    for (Planet* planet : planets) {
-	       planet->draw(DrawMode::REALISTIC);
-	    }
-	glPopMatrix();
+    for (Planet* planet : planets) {
+        glPushMatrix();
+            planet->draw(DrawMode::REALISTIC);
+        glPopMatrix();
+    }
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -59,10 +62,22 @@ void SolarSystem::draw_orbit_view() {
         glScalef(1.0f, -1.0f, 1.0f);
         glColor3f(1.0f, 1.0f, 1.0f);
 
-        glPushMatrix();
-            for (Planet* planet : planets) {
+        for (Planet* planet : planets) {
+            glPushMatrix();
                 planet->draw(DrawMode::ORBIT);
-            }
-        glPopMatrix();
+            glPopMatrix();
+        }
 	glPopMatrix();
+}
+
+void SolarSystem::draw_zoomed_in_view() {
+    draw_realistic_view();
+}
+
+Planet* SolarSystem::get_selected_planet() {
+    return selected_planet;
+}
+
+void SolarSystem::set_selected_planet(unsigned char i) {
+    selected_planet = planets[i];
 }

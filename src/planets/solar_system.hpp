@@ -17,15 +17,16 @@ class SolarSystem {
     public:
         void init();
         void update();
-        void redraw();
-
-        void setup_orbit_view(Rect windowCoordinates);
-        void setup_realistic_view(Rect windowCoordinates);
 
         void draw_orbit_view();
         void draw_realistic_view();
+        void draw_zoomed_in_view();
+
+        Planet* get_selected_planet();
+        void set_selected_planet(unsigned char i);
     private:
         std::vector<Planet*> planets;
+        Planet* selected_planet;
 };
 
 

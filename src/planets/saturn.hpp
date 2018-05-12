@@ -7,8 +7,9 @@
 
 #include "planet.hpp"
 
-class Saturn : Planet {
-
+class Saturn : public Planet {
+    public:
+        Saturn();
 };
 
 

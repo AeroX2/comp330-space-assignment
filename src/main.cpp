@@ -20,13 +20,105 @@ int WINDOW_HEIGHT = WINDOW_INITIAL_HEIGHT;
 
 SolarSystem solar_system;
 
+Rect top;
+Rect viewport1;
+Rect viewport2;
+Rect viewport3;
+Rect viewport4;
+Rect* current_top = &viewport1;
+
 double current_time = 0;
 double accumulator = 0;
 bool running = true;
 
+void keyboard_callback(unsigned char key, int x, int y) {
+	switch(key) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+            solar_system.set_selected_planet(key-'0');
+            break;
+        default:
+            break;
+	}
+}
+
+void swap_viewports(Rect& new_top) {
+    *current_top = new_top;
+    new_top = top;
+    current_top = &new_top;
+}
+
+void special_input_callback(int key, int x, int y) {
+	switch(key)	{
+		case GLUT_KEY_UP:
+            break;
+
+		case GLUT_KEY_F1:
+            swap_viewports(viewport1);
+            break;
+
+        case GLUT_KEY_F2:
+            swap_viewports(viewport2);
+            break;
+
+        case GLUT_KEY_F3:
+            swap_viewports(viewport3);
+            break;
+
+        case GLUT_KEY_F4:
+            swap_viewports(viewport4);
+            break;
+
+        default:
+            break;
+	}
+}
+
+void reshape(int width, int height) {
+	WINDOW_WIDTH = width;
+	WINDOW_HEIGHT = height;
+
+	auto dividerHeight = (int) (WINDOW_HEIGHT * HORIZONTAL_DIVISION);
+	auto firstThird = (int) (WINDOW_WIDTH * (1.0f / 3.0f));
+	auto secondThird = (int) (WINDOW_WIDTH * (2.0f / 3.0f));
+
+	//Top
+    viewport1.bottom_left_x = 0;
+    viewport1.bottom_left_y = dividerHeight;
+    viewport1.top_right_x = WINDOW_WIDTH;
+    viewport1.top_right_y = WINDOW_HEIGHT;
+
+	//Bottom right
+	viewport2.bottom_left_x = secondThird;
+	viewport2.bottom_left_y = 0;
+    viewport2.top_right_x = WINDOW_WIDTH;
+    viewport2.top_right_y = dividerHeight;
+
+    //Bottom middle
+    viewport3.bottom_left_x = firstThird;
+    viewport3.bottom_left_y = 0;
+    viewport3.top_right_x = secondThird;
+    viewport3.top_right_y = dividerHeight;
+
+    //Bottom left
+    viewport4.bottom_left_x = 0;
+    viewport4.bottom_left_y = 0;
+    viewport4.top_right_x = firstThird;
+    viewport4.top_right_y = dividerHeight;
+
+    top = viewport1;
+}
+
 void init() {
 	Textures::load_gl_textures();
 	solar_system.init();
+	reshape(WINDOW_INITIAL_WIDTH, WINDOW_INITIAL_HEIGHT);
 
 	glShadeModel(GL_SMOOTH);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
@@ -39,69 +131,33 @@ void init() {
 	glEnable(GL_NORMALIZE);
 }
 
-void keyboard_callback(unsigned char key, int x, int y) {
-	switch(key) {
-        default:
-            break;
-	}
-}
-
-void special_input_callback(int key, int x, int y) {
-	switch(key)	{
-		case GLUT_KEY_UP:
-            break;
-
-		case GLUT_KEY_F1:
-            break;
-
-        case GLUT_KEY_F2:
-            break;
-
-        case GLUT_KEY_F3:
-            break;
-
-        case GLUT_KEY_F4:
-            break;
-
-        default:
-            break;
-	}
-}
-
-void resize_callback(int width, int height) {
-	WINDOW_WIDTH = width;
-	WINDOW_HEIGHT = height;
-}
-
 void update() {
     solar_system.update();
 }
 
-void setup_realistic_view(Rect windowCoordinates) {
-	const int viewportWidth = windowCoordinates.topRightX - windowCoordinates.bottomLeftX;
-	const int viewportHeight = windowCoordinates.topRightY - windowCoordinates.bottomLeftY;
-	glViewport(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
-
-	glScissor(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+void setup_realistic_view(Rect window_coordinates) {
+	int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
+	int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
+	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+	glScissor(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
 
 	glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0f, (float) viewportWidth / (float) viewportHeight, 0.01f, 100.0f);
+	gluPerspective(60.0f, (float) viewport_width / (float) viewport_height, 0.01f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(4.0f, 1.0f, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 }
 
-void setup_orbit_view(Rect windowCoordinates) {
-	const int viewportWidth = windowCoordinates.topRightX - windowCoordinates.bottomLeftX;
-	const int viewportHeight = windowCoordinates.topRightY - windowCoordinates.bottomLeftY;
-	glViewport(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
-
-	glScissor(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+void setup_orbit_view(Rect window_coordinates, Planet planet) {
+	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
+	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
+	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+	glScissor(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
 
 	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -109,36 +165,66 @@ void setup_orbit_view(Rect windowCoordinates) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	const float worldWindowHalfWidth = 4.0f;
-	const float aspectRatio = (float) viewportHeight / (float) viewportWidth;
+	const float aspectRatio = (float) viewport_height / (float) viewport_width;
 	glOrtho(-worldWindowHalfWidth, worldWindowHalfWidth, -worldWindowHalfWidth * aspectRatio, worldWindowHalfWidth * aspectRatio, -1.0f, 1.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	glTranslatef(-planet.position.x, -planet.position.y, -planet.position.z);
+}
+
+void setup_zoomed_in_view(Rect window_coordinates, Planet planet) {
+	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
+	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
+	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+	glScissor(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(100.0f, (float) viewport_width / (float) viewport_height, 0.01f, 100.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(planet.position.x, planet.position.y, planet.position.z+planet.radius+0.3,
+              planet.position.x, planet.position.y, planet.position.z,
+              0.0f, 1.0f, 0.0f);
+}
+
+void setup_surface_view(Rect window_coordinates, Planet planet) {
+	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
+	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
+	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+	glScissor(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 }
 
 void redraw() {
-	const int dividerHeight = WINDOW_HEIGHT * HORIZONTAL_DIVISION;
-	const int firstThird = (int) (WINDOW_WIDTH * (1.0f / 3.0f));
-	const int secondThird = (int) (WINDOW_WIDTH * (2.0f / 3.0f));
-
-	Rect bottomRightViewport;
-	bottomRightViewport.bottomLeftX = secondThird;
-	bottomRightViewport.bottomLeftY = 0;
-	bottomRightViewport.topRightX = WINDOW_WIDTH;
-	bottomRightViewport.topRightY = dividerHeight;
-
-	Rect topViewport;
-	topViewport.bottomLeftX = 0;
-	topViewport.bottomLeftY = dividerHeight;
-	topViewport.topRightX = WINDOW_WIDTH;
-	topViewport.topRightY = WINDOW_HEIGHT;
-
 	glClear(GL_COLOR_BUFFER_BIT);
-    setup_realistic_view(topViewport);
+
+	Planet selected_planet = *solar_system.get_selected_planet();
+
+    setup_realistic_view(viewport1);
     solar_system.draw_realistic_view();
 
-	setup_orbit_view(bottomRightViewport);
+    setup_orbit_view(viewport2, selected_planet);
 	solar_system.draw_orbit_view();
+
+	setup_zoomed_in_view(viewport3, selected_planet);
+	solar_system.draw_zoomed_in_view();
+
+	setup_surface_view(viewport4, selected_planet);
+	selected_planet.draw(DrawMode::SURFACE);
 
     glutSwapBuffers();
 }
@@ -182,7 +268,7 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(redraw);
 	glutSpecialFunc(special_input_callback);
 	glutKeyboardFunc(keyboard_callback);
-	glutReshapeFunc(resize_callback);
+	glutReshapeFunc(reshape);
 
     debug("Starting gameloop");
     init();

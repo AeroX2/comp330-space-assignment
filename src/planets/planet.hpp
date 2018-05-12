@@ -27,12 +27,13 @@ class Planet {
 
         virtual void update();
         virtual void draw(DrawMode mode);
-    private:
         Vector3 position;
-        float rotation;
         float radius;
+        float rotation;
+    private:
         float orbit_radius;
         float orbit_speed;
+        float distance;
 
         int texture_id;
         std::string name;

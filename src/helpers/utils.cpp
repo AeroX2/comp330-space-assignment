@@ -4,10 +4,43 @@
 
 #include "utils.hpp"
 
-// Returns a random float between 0 and 1
-float Utils::randFloat() {
-    int r = rand();
-    return (float) r / (float) RAND_MAX;
+std::mt19937 &Utils::random_engine() {
+    static std::mt19937 engine{(unsigned int) 347};
+    return engine;
+}
+
+/*
+ * Generate a random float between min and max
+ */
+float Utils::random_range_float(float min, float max) {
+    //Probably not such a great idea to recreate the distribution every time
+    //But neither is using it incorrectly
+    std::uniform_real_distribution<float> distribution{min, max};
+    return distribution(random_engine());
+}
+
+/*
+ * Generate a random int between min and max
+ */
+int Utils::random_range_int(int min, int max) {
+    //Probably not such a great idea to recreate the distribution every time
+    //But neither is using it incorrectly
+    std::uniform_int_distribution<> distribution{min, max};
+    return distribution(random_engine());
+}
+
+/*
+ * Generate a random int between 0 and 1
+ */
+float Utils::random_normalised() {
+    return random_range_float(0, 1);
+}
+
+/*
+ * Generate a random int between -1 and 1
+ */
+float Utils::random_clamped() {
+    return random_range_float(-1, 1);
 }
 
 void Utils::draw_string(std::string s) {
@@ -18,7 +51,7 @@ void Utils::draw_string(std::string s) {
 }
 
 // All parameters are 0 to 1 except for shininess which is 0 to 128
-void Utils::setMaterial(
+void Utils::set_material(
         float diffuseR, float diffuseG, float diffuseB,
         float specularR, float specularG, float specularB,
         float shininess,
