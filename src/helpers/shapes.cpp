@@ -28,7 +28,7 @@ void Shapes::drawSphere() {
 	glCallList(sphereList);
 }
 
-void Shapes::drawCircle() {
+void Shapes::draw_circle() {
 	const float sides = 128.0f;
 	const float step = (2.0 * PI) / sides;
 

@@ -25,14 +25,8 @@ double accumulator = 0;
 bool running = true;
 
 void init() {
-	Textures::load_gl_texture(SATURN_TEXTURE);
-	Textures::load_gl_texture(DIONE_TEXTURE);
-    Textures::load_gl_texture(ENCELADUS_TEXTURE);
-    Textures::load_gl_texture(MIMAS_TEXTURE);
-    Textures::load_gl_texture(IAPETUS_TEXTURE);
-    Textures::load_gl_texture(RHEA_TEXTURE);
-    Textures::load_gl_texture(TETHYS_TEXTURE);
-    Textures::load_gl_texture(TITAN_TEXTURE);
+	Textures::load_gl_textures();
+	solar_system.init();
 
 	glShadeModel(GL_SMOOTH);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
@@ -44,8 +38,6 @@ void init() {
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_NORMALIZE);
 }
-
-
 
 void keyboard_callback(unsigned char key, int x, int y) {
 	switch(key) {
@@ -85,9 +77,68 @@ void update() {
     solar_system.update();
 }
 
+void setup_realistic_view(Rect windowCoordinates) {
+	const int viewportWidth = windowCoordinates.topRightX - windowCoordinates.bottomLeftX;
+	const int viewportHeight = windowCoordinates.topRightY - windowCoordinates.bottomLeftY;
+	glViewport(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+
+	glScissor(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+
+	glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60.0f, (float) viewportWidth / (float) viewportHeight, 0.01f, 100.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(4.0f, 1.0f, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+}
+
+void setup_orbit_view(Rect windowCoordinates) {
+	const int viewportWidth = windowCoordinates.topRightX - windowCoordinates.bottomLeftX;
+	const int viewportHeight = windowCoordinates.topRightY - windowCoordinates.bottomLeftY;
+	glViewport(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+
+	glScissor(windowCoordinates.bottomLeftX, windowCoordinates.bottomLeftY, viewportWidth, viewportHeight);
+
+	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	const float worldWindowHalfWidth = 4.0f;
+	const float aspectRatio = (float) viewportHeight / (float) viewportWidth;
+	glOrtho(-worldWindowHalfWidth, worldWindowHalfWidth, -worldWindowHalfWidth * aspectRatio, worldWindowHalfWidth * aspectRatio, -1.0f, 1.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
 void redraw() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    solar_system.redraw();
+	const int dividerHeight = WINDOW_HEIGHT * HORIZONTAL_DIVISION;
+	const int firstThird = (int) (WINDOW_WIDTH * (1.0f / 3.0f));
+	const int secondThird = (int) (WINDOW_WIDTH * (2.0f / 3.0f));
+
+	Rect bottomRightViewport;
+	bottomRightViewport.bottomLeftX = secondThird;
+	bottomRightViewport.bottomLeftY = 0;
+	bottomRightViewport.topRightX = WINDOW_WIDTH;
+	bottomRightViewport.topRightY = dividerHeight;
+
+	Rect topViewport;
+	topViewport.bottomLeftX = 0;
+	topViewport.bottomLeftY = dividerHeight;
+	topViewport.topRightX = WINDOW_WIDTH;
+	topViewport.topRightY = WINDOW_HEIGHT;
+
+	glClear(GL_COLOR_BUFFER_BIT);
+    setup_realistic_view(topViewport);
+    solar_system.draw_realistic_view();
+
+	setup_orbit_view(bottomRightViewport);
+	solar_system.draw_orbit_view();
 
     glutSwapBuffers();
 }
@@ -118,7 +169,7 @@ void gameloop() {
 #endif
 }
 
-int main (int argc, char** argv) {
+int main(int argc, char** argv) {
     debug("Setting up OpenGL windows");
 	glutInit(&argc, argv);
 	glClearColor(1.0, 1.0, 1.0, 0.0);

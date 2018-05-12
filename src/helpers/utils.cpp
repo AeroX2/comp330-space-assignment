@@ -10,7 +10,7 @@ float Utils::randFloat() {
     return (float) r / (float) RAND_MAX;
 }
 
-void Utils::drawString(std::string s) {
+void Utils::draw_string(std::string s) {
     glRasterPos2f(0, 0);
     for (unsigned int i = 0; i < s.size(); i += 1) {
         glutBitmapCharacter(GLUT_BITMAP_8_BY_13, s.at(i));

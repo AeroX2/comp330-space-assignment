@@ -24,13 +24,4 @@ const long CLOCK_PER_SEC = 1000000;
 
 const float SATURN_RADIUS = 1.0f;
 
-const char* const SATURN_TEXTURE = "textures/saturn.jpg";
-const char* const DIONE_TEXTURE = "textures/dione.jpg";
-const char* const ENCELADUS_TEXTURE = "textures/enceladus.jpg";
-const char* const MIMAS_TEXTURE = "textures/mimas.jpg";
-const char* const IAPETUS_TEXTURE = "textures/iapetus.jpg";
-const char* const RHEA_TEXTURE = "textures/rhea.jpg";
-const char* const TETHYS_TEXTURE = "textures/tethys.jpg";
-const char* const TITAN_TEXTURE = "textures/titan.jpg";
-
 #endif /* CONSTANTS_HPP_ */

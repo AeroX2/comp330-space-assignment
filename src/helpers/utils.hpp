@@ -30,11 +30,11 @@ struct Vector3 {
 };
 
 class Utils {
-        void drawString(std::string s);
         float randFloat();
     public:
         static void setMaterial(float diffuseR, float diffuseG, float diffuseB, float specularR, float specularG, float specularB,
                                 float shininess, float emissionR, float emissionG, float emissionB);
+        static void draw_string(std::string s);
 };
 
 #endif
