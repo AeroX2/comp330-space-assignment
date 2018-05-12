@@ -15,29 +15,38 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
     this->orbit_speed = orbit_speed;
     this->name = std::move(name);
 
-    rotation = 0; //Utils::random_range_float(0, 2*PI);
+    selected = false;
+    scan_amount = 0;
+
+    rotation = Utils::random_range_float(0, 2*PI);
+    orbit_rotation = Utils::random_range_float(0, 2*PI);
     distance = 2*PI*orbit_radius;
 
-    position.x = std::cos(rotation) * orbit_radius;
+    position.x = std::cos(orbit_rotation) * orbit_radius;
     position.y = 0;
-    position.z = std::sin(rotation) * orbit_radius;
+    position.z = std::sin(orbit_rotation) * orbit_radius;
 }
 
 void Planet::update() {
+    if (selected)
+        scan_amount += scan_amount < 1 ? 0.001 : 0;
+    rotation += 0.5;
+
     if (orbit_speed <= 0 && distance <= 0) return;
+    orbit_rotation += orbit_speed / distance;
 
-    rotation += orbit_speed / distance;
-
-    position.x = std::cos(rotation) * orbit_radius;
+    position.x = std::cos(orbit_rotation) * orbit_radius;
     position.y = 0;
-    position.z = std::sin(rotation) * orbit_radius;
+    position.z = std::sin(orbit_rotation) * orbit_radius;
 }
 
 void Planet::draw(DrawMode mode) {
     switch (mode) {
         case REALISTIC:
             glTranslatef(position.x, position.y, position.z);
+            glRotatef(rotation, 0, 1, 0);
             glScalef(radius, radius, radius);
+
             glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(texture_id));
             Utils::set_material(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f);
             Shapes::drawSphere();
@@ -56,10 +65,10 @@ void Planet::draw(DrawMode mode) {
             glBindTexture(GL_TEXTURE_2D, texture_id);
 
             glBegin(GL_QUADS);
-            glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
-            glTexCoord2f(0, 1); glVertex3f(-1, 1, 0);
-            glTexCoord2f(1, 1); glVertex3f(1, 1, 0);
-            glTexCoord2f(1, 0); glVertex3f(1, -1, 0);
+                glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
+                glTexCoord2f(0, 1); glVertex3f(-1, 1, 0);
+                glTexCoord2f(scan_amount, 1); glVertex3f(scan_amount*2-1, 1, 0);
+                glTexCoord2f(scan_amount, 0); glVertex3f(scan_amount*2-1, -1, 0);
             glEnd();
 
             glDisable(GL_TEXTURE_2D);

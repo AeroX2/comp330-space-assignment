@@ -5,5 +5,5 @@
 #include "saturn.hpp"
 
 Saturn::Saturn() : Planet(Texture::SATURN_TEXTURE,1.0,0.0,0.0,"Saturn") {
-    this->rotation = 0;
+    this->orbit_rotation = 0;
 }
