@@ -4,14 +4,15 @@
 
 #include "textures.hpp"
 
-std::map<Texture, std::string> enum_file_mapping { std::make_pair(Texture::DIONE_TEXTURE, "textures/dione.jpg"),
-                                                   std::make_pair(Texture::SATURN_TEXTURE, "textures/saturn.jpg"),
-                                                   std::make_pair(Texture::ENCELADUS_TEXTURE, "textures/enceladus.jpg"),
-                                                   std::make_pair(Texture::MIMAS_TEXTURE, "textures/mimas.jpg"),
-                                                   std::make_pair(Texture::IAPETUS_TEXTURE, "textures/iapetus.jpg"),
-                                                   std::make_pair(Texture::RHEA_TEXTURE, "textures/rhea.jpg"),
-                                                   std::make_pair(Texture::TETHYS_TEXTURE, "textures/tethys.jpg"),
-                                                   std::make_pair(Texture::TITAN_TEXTURE, "textures/titan.jpg") };
+std::map<Texture, std::string> enum_file_mapping { std::make_pair(Texture::DIONE, "textures/dione.jpg"),
+                                                   std::make_pair(Texture::SATURN, "textures/saturn.jpg"),
+                                                   std::make_pair(Texture::SATURN_RINGS, "textures/saturn_rings.png"),
+                                                   std::make_pair(Texture::ENCELADUS, "textures/enceladus.jpg"),
+                                                   std::make_pair(Texture::MIMAS, "textures/mimas.jpg"),
+                                                   std::make_pair(Texture::IAPETUS, "textures/iapetus.jpg"),
+                                                   std::make_pair(Texture::RHEA, "textures/rhea.jpg"),
+                                                   std::make_pair(Texture::TETHYS, "textures/tethys.jpg"),
+                                                   std::make_pair(Texture::TITAN, "textures/titan.jpg") };
 
 std::unordered_map<Texture, unsigned int, TextureEnumHash> Textures::textures {};
 

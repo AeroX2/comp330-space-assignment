@@ -9,10 +9,10 @@
 
 class Shapes {
 
-        void drawCube();
     public:
-        static void drawSphere();
+        static void draw_sphere();
         static void draw_circle();
+        static void draw_cube();
 };
 
 #endif

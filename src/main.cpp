@@ -122,10 +122,6 @@ void init() {
 
 	glShadeModel(GL_SMOOTH);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_NORMALIZE);
@@ -171,7 +167,8 @@ void setup_orbit_view(Rect window_coordinates, Planet planet) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glTranslatef(-planet.position.x, -planet.position.y, -planet.position.z);
+	//TODO Not correctly working for the orbit view
+//	glTranslatef(-planet.position.x, -planet.position.y, -planet.position.z);
 }
 
 void setup_zoomed_in_view(Rect window_coordinates, Planet planet) {

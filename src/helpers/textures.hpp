@@ -22,14 +22,15 @@ struct TextureEnumHash
 };
 
 enum Texture {
-    SATURN_TEXTURE,
-    DIONE_TEXTURE,
-    ENCELADUS_TEXTURE,
-    MIMAS_TEXTURE,
-    IAPETUS_TEXTURE,
-    RHEA_TEXTURE,
-    TETHYS_TEXTURE,
-    TITAN_TEXTURE
+    SATURN,
+    SATURN_RINGS,
+    DIONE,
+    ENCELADUS,
+    MIMAS,
+    IAPETUS,
+    RHEA,
+    TETHYS,
+    TITAN
 };
 
 class Textures {

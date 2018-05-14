@@ -25,12 +25,14 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
     position.x = std::cos(orbit_rotation) * orbit_radius;
     position.y = 0;
     position.z = std::sin(orbit_rotation) * orbit_radius;
+
+    rotation_speed = 0.5f;
 }
 
 void Planet::update() {
     if (selected)
         scan_amount += scan_amount < 1 ? 0.001 : 0;
-    rotation += 0.5;
+    rotation += rotation_speed;
 
     if (orbit_speed <= 0 && distance <= 0) return;
     orbit_rotation += orbit_speed / distance;
@@ -47,9 +49,19 @@ void Planet::draw(DrawMode mode) {
             glRotatef(rotation, 0, 1, 0);
             glScalef(radius, radius, radius);
 
-            glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(texture_id));
+            glBindTexture(GL_TEXTURE_2D, texture_id);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            //Doesn't seem to be defined in freeglut
+            //However this does fix the clamp issue
+            #define GL_CLAMP_TO_EDGE 0x812F
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
             Utils::set_material(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f);
-            Shapes::drawSphere();
+            Shapes::draw_sphere();
             break;
         case ORBIT:
             glTranslatef(position.x, position.z, 0.0f);

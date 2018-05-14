@@ -27,20 +27,24 @@ class Planet {
 
         virtual void update();
         virtual void draw(DrawMode mode);
+
         Vector3 position;
         float radius;
-        float orbit_rotation;
-        bool selected;
-    private:
         float orbit_radius;
+
+        float rotation_speed;
         float orbit_speed;
 
-        float rotation;
+        bool selected;
+    private:
+
         float distance;
+        float rotation;
+        float orbit_rotation;
 
         float scan_amount;
 
-        int texture_id;
+        GLuint texture_id;
         std::string name;
 };
 

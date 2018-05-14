@@ -9,13 +9,13 @@
 
 void SolarSystem::init() {
    	planets.push_back(new Saturn());
-    planets.push_back(new Planet(Texture::MIMAS_TEXTURE,     0.2 / 3.0f,  1.9,  0.009, "Mimas"));
-    planets.push_back(new Planet(Texture::ENCELADUS_TEXTURE, 0.25/ 3.0f, 3.0,   0.014, "Enceladus"));
-    planets.push_back(new Planet(Texture::TETHYS_TEXTURE,    0.5 / 3.0f,  4.4,  0.019, "Tethys"));
-    planets.push_back(new Planet(Texture::DIONE_TEXTURE,     0.55/ 3.0f, 5.5,   0.027, "Dione"));
-    planets.push_back(new Planet(Texture::RHEA_TEXTURE,      0.7 / 3.0f,  6.5,  0.045, "Rhea"));
-    planets.push_back(new Planet(Texture::TITAN_TEXTURE,     0.8 / 3.0f,  8.0,  0.16, "Titan"));
-    planets.push_back(new Planet(Texture::IAPETUS_TEXTURE,   0.5 / 3.0f,  21.0, 0.79, "Iapetus"));
+    planets.push_back(new Planet(Texture::MIMAS,     0.20f / 3.0f,  1.9,  0.009, "Mimas"));
+    planets.push_back(new Planet(Texture::ENCELADUS, 0.25f / 3.0f, 3.0,   0.014, "Enceladus"));
+    planets.push_back(new Planet(Texture::TETHYS,    0.50f / 3.0f,  4.4,  0.019, "Tethys"));
+    planets.push_back(new Planet(Texture::DIONE,     0.55f / 3.0f, 5.5,   0.027, "Dione"));
+    planets.push_back(new Planet(Texture::RHEA,      0.70f / 3.0f,  6.5,  0.045, "Rhea"));
+    planets.push_back(new Planet(Texture::TITAN,     0.80f / 3.0f,  8.0,  0.16,  "Titan"));
+    planets.push_back(new Planet(Texture::IAPETUS,   0.50f / 3.0f,  21.0, 0.79,  "Iapetus"));
 
     selected_planet = planets[1];
     selected_planet->selected = true;
@@ -35,12 +35,12 @@ void SolarSystem::draw_realistic_view() {
 
 	// Sunlight
 	glEnable(GL_LIGHT0);
-	const float sunPosition [4] = { 0.0f, 2.0f, 0.0f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, sunPosition);
-	const float sunAmbient [4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, sunAmbient);
-	const float sunDiffuse [4] = { 1.0f, 1.0f, 0.9f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, sunDiffuse);
+	const float sun_position [4] = { 0.0f, 2.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, sun_position);
+	const float sun_ambient [4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, sun_ambient);
+	const float sun_diffuse [4] = { 1.0f, 1.0f, 0.9f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 

@@ -10,6 +10,10 @@
 class Saturn : public Planet {
     public:
         Saturn();
+
+        void draw(DrawMode mode);
+    private:
+        GLuint ring_texture_id;
 };
 
 

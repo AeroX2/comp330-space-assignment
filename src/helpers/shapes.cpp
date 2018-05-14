@@ -4,7 +4,7 @@
 
 #include "shapes.hpp"
 
-void Shapes::drawSphere() {
+void Shapes::draw_sphere() {
 	const float radius = 1.0f;
 	const int slices = 64;
 	const int stacks = 32;
@@ -30,7 +30,7 @@ void Shapes::drawSphere() {
 
 void Shapes::draw_circle() {
 	const float sides = 128.0f;
-	const float step = (2.0 * PI) / sides;
+	const float step = (2.0f * PI) / sides;
 
 	static bool compiled = false;
 	static unsigned int circleList = glGenLists(1);
@@ -39,8 +39,8 @@ void Shapes::draw_circle() {
 		glNewList(circleList, GL_COMPILE);
 			glBegin(GL_LINE_LOOP);
 				for (float theta = 0; theta < 2 * PI; theta += step) {
-					float x = cos(theta);
-					float y = sin(theta);
+					float x = std::cos(theta);
+					float y = std::sin(theta);
 					glVertex2f(x, y);
 				}
 			glEnd();
@@ -51,7 +51,7 @@ void Shapes::draw_circle() {
 	glCallList(circleList);
 }
 
-void Shapes::drawCube() {
+void Shapes::draw_cube() {
 	static bool compiled = false;
 	static unsigned int cubeList = glGenLists(1);
 
