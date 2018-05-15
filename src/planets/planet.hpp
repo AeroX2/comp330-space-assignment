@@ -37,7 +37,6 @@ class Planet {
 
         bool selected;
     private:
-
         float distance;
         float rotation;
         float orbit_rotation;

@@ -32,8 +32,8 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
 }
 
 void Planet::update() {
-    if (selected)
-        scan_amount += scan_amount < 1 ? 0.001 : 0;
+    if (selected) scan_amount += scan_amount < 1 ? 0.001 : 0;
+
     rotation += rotation_speed;
 
     if (orbit_speed <= 0 && distance <= 0) return;

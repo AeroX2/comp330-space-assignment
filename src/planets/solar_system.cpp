@@ -11,16 +11,16 @@
 #include "saturn.hpp"
 
 void SolarSystem::init() {
-   	planets.push_back(new Saturn());
     planets.push_back(new Planet(Texture::MIMAS,     0.20f / 3.0f,  1.9,  0.009, "Mimas"));
     planets.push_back(new Planet(Texture::ENCELADUS, 0.25f / 3.0f, 3.0,   0.014, "Enceladus"));
     planets.push_back(new Planet(Texture::TETHYS,    0.50f / 3.0f,  4.4,  0.019, "Tethys"));
     planets.push_back(new Planet(Texture::DIONE,     0.55f / 3.0f, 5.5,   0.027, "Dione"));
     planets.push_back(new Planet(Texture::RHEA,      0.70f / 3.0f,  6.5,  0.045, "Rhea"));
-    planets.push_back(new Planet(Texture::TITAN,     0.80f / 3.0f,  8.0,  0.16,  "Titan"));
-    planets.push_back(new Planet(Texture::IAPETUS,   0.50f / 3.0f,  21.0, 0.79,  "Iapetus"));
+    planets.push_back(new Planet(Texture::TITAN,     0.80f / 3.0f,  8.0,  0.080,  "Titan"));
+    planets.push_back(new Planet(Texture::IAPETUS,   0.50f / 3.0f,  21.0, 0.070,  "Iapetus"));
+    planets.push_back(new Saturn());
 
-    selected_planet = planets[1];
+    selected_planet = planets[0];
     selected_planet->selected = true;
 }
 
@@ -47,7 +47,7 @@ void SolarSystem::draw_realistic_view() {
 
     glPushMatrix();
         glColor3f(1.0f, 1.0f, 1.0f);
-        glScalef(10,10,10);
+        glScalef(100,100,100);
 
         glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

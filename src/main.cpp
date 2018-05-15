@@ -36,7 +36,6 @@ bool running = true;
 
 void keyboard_callback(unsigned char key, int x, int y) {
 	switch(key) {
-        case '0':
         case '1':
         case '2':
         case '3':
@@ -44,7 +43,8 @@ void keyboard_callback(unsigned char key, int x, int y) {
         case '5':
         case '6':
         case '7':
-            solar_system.set_selected_planet(key-'0');
+        case '8':
+            solar_system.set_selected_planet(key-'1');
             break;
         default:
             break;
@@ -134,7 +134,7 @@ void update() {
     solar_system.update();
 }
 
-void setup_realistic_view(Rect window_coordinates) {
+void setup_realistic_view(Rect window_coordinates, Planet planet) {
 	int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
@@ -149,7 +149,9 @@ void setup_realistic_view(Rect window_coordinates) {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(4.0f, 1.0f, 4.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	gluLookAt(3.0f, 3.0f, 3.0f,
+              planet.position.x, planet.position.y, planet.position.z,
+              0.0f, 1.0f, 0.0f);
 }
 
 void setup_orbit_view(Rect window_coordinates, Planet planet) {
@@ -163,15 +165,20 @@ void setup_orbit_view(Rect window_coordinates, Planet planet) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	const float worldWindowHalfWidth = 4.0f;
-	const float aspectRatio = (float) viewport_height / (float) viewport_width;
-	glOrtho(-worldWindowHalfWidth, worldWindowHalfWidth, -worldWindowHalfWidth * aspectRatio, worldWindowHalfWidth * aspectRatio, -1.0f, 1.0f);
+	const float world_window_half_height = 4.0f;
+	const float aspect_ratio = (float) viewport_height / (float) viewport_width;
+	glOrtho(-world_window_half_height,
+            world_window_half_height,
+            -world_window_half_height * aspect_ratio,
+            world_window_half_height * aspect_ratio,
+            -1.0f, 1.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	//TODO Not correctly working for the orbit view
-//	glTranslatef(-planet.position.x, -planet.position.y, -planet.position.z);
+    glScalef(0.5,0.5,0);
+	glTranslatef(-planet.position.x, planet.position.z, 0);
 }
 
 void setup_zoomed_in_view(Rect window_coordinates, Planet planet) {
@@ -214,7 +221,7 @@ void redraw() {
 
 	Planet selected_planet = *solar_system.get_selected_planet();
 
-    setup_realistic_view(viewport1);
+    setup_realistic_view(viewport1, selected_planet);
     solar_system.draw_realistic_view();
 
     setup_orbit_view(viewport2, selected_planet);
