@@ -31,6 +31,19 @@ void Textures::load_gl_textures() {
 
         textures[pair.first] = index;
     }
+
+    //TODO Load the stars
+    unsigned int index = SOIL_load_OGL_texture(
+            "textures/stars/cwd_bk.JPG",
+            SOIL_LOAD_AUTO,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_INVERT_Y | SOIL_FLAG_MIPMAPS);
+
+    if (index == 0) {
+        std::cerr << SOIL_last_result();
+    } else {
+        textures[Texture::STARMAP] = index;
+    }
 }
 
 unsigned int Textures::get_texture_id(Texture texture) {

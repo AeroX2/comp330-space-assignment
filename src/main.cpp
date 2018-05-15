@@ -6,6 +6,9 @@ Date: 27 April 2018
 
 #include <iostream>
 #include <GL/freeglut.h>
+
+#include "helpers/shapes.hpp"
+
 #if defined(_WIN32) || defined(WIN32)
 #else
 #include <unistd.h>

@@ -30,7 +30,8 @@ enum Texture {
     IAPETUS,
     RHEA,
     TETHYS,
-    TITAN
+    TITAN,
+    STARMAP
 };
 
 class Textures {

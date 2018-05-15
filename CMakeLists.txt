@@ -19,7 +19,12 @@ add_executable(comp330_space_assignment
         src/helpers/textures.hpp
         src/constants.hpp
         src/planets/solar_system.cpp
-        src/planets/solar_system.hpp src/helpers/shapes.cpp src/planets/saturn.cpp src/planets/saturn.hpp src/planets/planet.cpp src/planets/planet.hpp)
+        src/planets/solar_system.hpp
+        src/helpers/shapes.cpp
+        src/planets/saturn.cpp
+        src/planets/saturn.hpp
+        src/planets/planet.cpp
+        src/planets/planet.hpp)
 target_link_libraries(comp330_space_assignment SOIL ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
 file(COPY ./textures DESTINATION ./)

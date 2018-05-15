@@ -4,8 +4,10 @@
 
 #include <utility>
 #include <GL/gl.h>
-#include <helpers/utils.hpp>
-#include <helpers/shapes.hpp>
+#include <GL/glext.h>
+
+#include "helpers/utils.hpp"
+#include "helpers/shapes.hpp"
 #include "planet.hpp"
 
 Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_speed, std::string name) {
@@ -50,13 +52,8 @@ void Planet::draw(DrawMode mode) {
             glScalef(radius, radius, radius);
 
             glBindTexture(GL_TEXTURE_2D, texture_id);
-
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-            //Doesn't seem to be defined in freeglut
-            //However this does fix the clamp issue
-            #define GL_CLAMP_TO_EDGE 0x812F
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 

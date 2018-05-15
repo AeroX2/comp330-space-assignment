@@ -2,8 +2,11 @@
 // Created by James Ridey on 10/05/2018.
 //
 
-#include <helpers/shapes.hpp>
-#include <helpers/textures.hpp>
+#include <GL/freeglut.h>
+#include <GL/glext.h>
+
+#include "helpers/shapes.hpp"
+#include "helpers/textures.hpp"
 #include "solar_system.hpp"
 #include "saturn.hpp"
 
@@ -35,14 +38,28 @@ void SolarSystem::draw_realistic_view() {
 
 	// Sunlight
 	glEnable(GL_LIGHT0);
-	const float sun_position [4] = { 0.0f, 2.0f, 0.0f, 1.0f };
+	const float sun_position[4] = { 0.0f, 2.0f, 0.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, sun_position);
-	const float sun_ambient [4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const float sun_ambient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, sun_ambient);
-	const float sun_diffuse [4] = { 1.0f, 1.0f, 0.9f, 1.0f };
+	const float sun_diffuse[4] = { 1.0f, 1.0f, 0.9f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+    glPushMatrix();
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glScalef(10,10,10);
+
+        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glFrontFace(GL_CW);
+        Utils::set_material(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f);
+        Shapes::draw_cube();
+        glFrontFace(GL_CCW);
+    glPopMatrix();
 
 	// Planets
     for (Planet* planet : planets) {
@@ -58,17 +75,15 @@ void SolarSystem::draw_realistic_view() {
 }
 
 void SolarSystem::draw_orbit_view() {
-	glPushMatrix();
-        //Vertical flip mapping XZ plane to xy screen coordinates.
-        glScalef(1.0f, -1.0f, 1.0f);
-        glColor3f(1.0f, 1.0f, 1.0f);
+    //Vertical flip mapping XZ plane to xy screen coordinates.
+    glScalef(1.0f, -1.0f, 1.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
 
-        for (Planet* planet : planets) {
-            glPushMatrix();
-                planet->draw(DrawMode::ORBIT);
-            glPopMatrix();
-        }
-	glPopMatrix();
+    for (Planet* planet : planets) {
+        glPushMatrix();
+            planet->draw(DrawMode::ORBIT);
+        glPopMatrix();
+    }
 }
 
 void SolarSystem::draw_zoomed_in_view() {
