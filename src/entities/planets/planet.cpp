@@ -61,8 +61,17 @@ void Planet::draw(DrawMode mode) {
             Shapes::draw_sphere();
             break;
         case ORBIT:
-            glTranslatef(position.x, position.z, 0.0f);
-            glScalef(radius, radius, radius);
+            if (selected) {
+                glPushMatrix();
+                    //Draw the orbit
+                    glScalef(orbit_radius, orbit_radius, 1);
+                    Shapes::draw_circle();
+                glPopMatrix();
+            }
+
+            //Draw the planet and name
+            glTranslatef(position.x, position.z, 0);
+            glScalef(radius, radius, 1);
             Shapes::draw_circle();
             Utils::draw_string(name);
             break;

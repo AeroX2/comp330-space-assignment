@@ -13,6 +13,13 @@
 #include <string>
 #include <random>
 
+enum DrawMode {
+    REALISTIC,
+    ORBIT,
+    ZOOMED_IN,
+    SURFACE
+};
+
 struct Rect {
     int bottom_left_x;
     int bottom_left_y;

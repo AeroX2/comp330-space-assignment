@@ -7,15 +7,10 @@
 
 
 #include <GL/gl.h>
-#include <helpers/textures.hpp>
-#include <helpers/utils.hpp>
 
-enum DrawMode {
-    REALISTIC,
-    ORBIT,
-    ZOOMED_IN,
-    SURFACE
-};
+#include "helpers/textures.hpp"
+#include "helpers/utils.hpp"
+#include "entities/probe.hpp"
 
 class Planet {
     public:

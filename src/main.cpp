@@ -16,12 +16,16 @@ Date: 27 April 2018
 
 #include "helpers/textures.hpp"
 #include "constants.hpp"
-#include "planets/solar_system.hpp"
+#include "entities/planets/solar_system.hpp"
 
 int WINDOW_WIDTH = WINDOW_INITIAL_WIDTH;
 int WINDOW_HEIGHT = WINDOW_INITIAL_HEIGHT;
 
 SolarSystem solar_system;
+
+int fps;
+int frame_counter;
+int previous_fps_time;
 
 Rect top;
 Rect viewport1;
@@ -219,7 +223,19 @@ void setup_surface_view(Rect window_coordinates, Planet planet) {
 void redraw() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Planet selected_planet = *solar_system.get_selected_planet();
+    //Calculate the current FPS
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    if ((currentTime - previous_fps_time) >= 1000) {
+        fps = frame_counter;
+        frame_counter = 0;
+        previous_fps_time = currentTime;
+        std::cout << "FPS: " << fps << std::endl;
+    }
+    frame_counter++;
+    //char temp_string[50];
+    //snprintf(temp_string, 50, "FPS: %d", fps);
+
+    Planet selected_planet = *solar_system.get_selected_planet();
 
     setup_realistic_view(viewport1, selected_planet);
     solar_system.draw_realistic_view();

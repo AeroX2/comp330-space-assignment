@@ -56,12 +56,14 @@ void SolarSystem::draw_realistic_view() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
         glFrontFace(GL_CW);
-        Utils::set_material(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f);
-        Shapes::draw_cube();
+        glDisable(GL_LIGHTING);
+            Shapes::draw_cube();
+        glEnable(GL_LIGHTING);
         glFrontFace(GL_CCW);
     glPopMatrix();
 
-	// Planets
+	// Planets and probe
+    probe.draw(DrawMode::REALISTIC);
     for (Planet* planet : planets) {
         glPushMatrix();
             planet->draw(DrawMode::REALISTIC);
@@ -79,6 +81,7 @@ void SolarSystem::draw_orbit_view() {
     glScalef(1.0f, -1.0f, 1.0f);
     glColor3f(1.0f, 1.0f, 1.0f);
 
+    probe.draw(DrawMode::ORBIT);
     for (Planet* planet : planets) {
         glPushMatrix();
             planet->draw(DrawMode::ORBIT);

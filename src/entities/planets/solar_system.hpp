@@ -26,7 +26,9 @@ class SolarSystem {
         void set_selected_planet(unsigned char i);
     private:
         std::vector<Planet*> planets;
+
         Planet* selected_planet;
+        Probe probe;
 };
 
 
