@@ -11,6 +11,7 @@
 
 #include "constants.hpp"
 #include "helpers/utils.hpp"
+#include "entities/probe.hpp"
 #include "planet.hpp"
 
 class SolarSystem {
@@ -20,10 +21,10 @@ class SolarSystem {
 
         void draw_orbit_view();
         void draw_realistic_view();
-        void draw_zoomed_in_view();
+        void draw_scanning_view();
 
-        Planet* get_selected_planet();
         void set_selected_planet(unsigned char i);
+        void draw_surface_view();
     private:
         std::vector<Planet*> planets;
 

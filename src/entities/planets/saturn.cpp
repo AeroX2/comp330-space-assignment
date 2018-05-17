@@ -5,7 +5,7 @@
 #include <helpers/shapes.hpp>
 #include "saturn.hpp"
 
-Saturn::Saturn() : Planet(Texture::SATURN,0.65,0.0,0.0,"Saturn") {
+Saturn::Saturn() : Planet(SATURN_CONFIG) {
     this->rotation_speed = 0;
     this->orbit_speed = 0;
 
@@ -23,7 +23,7 @@ void Saturn::draw(DrawMode mode) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glScalef(2.5,0,2.5);
+        glScalef(SATURN_RING_SCALE,0,SATURN_RING_SCALE);
         glBegin(GL_QUADS);
             glTexCoord2f(0, 0); glVertex3f(1, 0, 1);
             glTexCoord2f(0, 1); glVertex3f(1, 0, -1);

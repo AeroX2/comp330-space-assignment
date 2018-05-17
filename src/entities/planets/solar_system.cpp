@@ -11,30 +11,34 @@
 #include "saturn.hpp"
 
 void SolarSystem::init() {
-    planets.push_back(new Planet(Texture::MIMAS,     0.20f / 3.0f,  1.9,  0.009, "Mimas"));
-    planets.push_back(new Planet(Texture::ENCELADUS, 0.25f / 3.0f, 3.0,   0.014, "Enceladus"));
-    planets.push_back(new Planet(Texture::TETHYS,    0.50f / 3.0f,  4.4,  0.019, "Tethys"));
-    planets.push_back(new Planet(Texture::DIONE,     0.55f / 3.0f, 5.5,   0.027, "Dione"));
-    planets.push_back(new Planet(Texture::RHEA,      0.70f / 3.0f,  6.5,  0.045, "Rhea"));
-    planets.push_back(new Planet(Texture::TITAN,     0.80f / 3.0f,  8.0,  0.080,  "Titan"));
-    planets.push_back(new Planet(Texture::IAPETUS,   0.50f / 3.0f,  21.0, 0.070,  "Iapetus"));
+    planets.push_back(new Planet(MIMAS_CONFIG));
+    planets.push_back(new Planet(ENCELADUS_CONFIG));
+    planets.push_back(new Planet(TETHYS_CONFIG));
+    planets.push_back(new Planet(DIONE_CONFIG));
+    planets.push_back(new Planet(RHEA_CONFIG));
+    planets.push_back(new Planet(TITAN_CONFIG));
+    planets.push_back(new Planet(IAPETUS_CONFIG));
     planets.push_back(new Saturn());
 
-    selected_planet = planets[0];
-    selected_planet->selected = true;
+    set_selected_planet(0);
 }
 
 void SolarSystem::update() {
+    probe.update();
     for (Planet* planet : planets) {
         planet->update();
     }
 }
 
 void SolarSystem::draw_realistic_view() {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_TEXTURE_2D);
+    gluLookAt(3.0f, 3.0f, 3.0f,
+              selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
+              0.0f, 1.0f, 0.0f);
+
+//	glEnable(GL_DEPTH_TEST);
+//	glEnable(GL_CULL_FACE);
+//	glEnable(GL_LIGHTING);
+//	glEnable(GL_TEXTURE_2D);
 
 	// Sunlight
 	glEnable(GL_LIGHT0);
@@ -45,22 +49,23 @@ void SolarSystem::draw_realistic_view() {
 	const float sun_diffuse[4] = { 1.0f, 1.0f, 0.9f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
 
-    glPushMatrix();
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glScalef(100,100,100);
-
-        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glFrontFace(GL_CW);
-        glDisable(GL_LIGHTING);
-            Shapes::draw_cube();
-        glEnable(GL_LIGHTING);
-        glFrontFace(GL_CCW);
-    glPopMatrix();
+	//TODO Starmap still needs more work
+//    glPushMatrix();
+//        glColor3f(1.0f, 1.0f, 1.0f);
+//        glScalef(100,100,100);
+//
+//        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//
+//        glFrontFace(GL_CW);
+//        glDisable(GL_LIGHTING);
+//            Shapes::draw_cube();
+//        glEnable(GL_LIGHTING);
+//        glFrontFace(GL_CCW);
+//    glPopMatrix();
 
 	// Planets and probe
     probe.draw(DrawMode::REALISTIC);
@@ -69,14 +74,12 @@ void SolarSystem::draw_realistic_view() {
             planet->draw(DrawMode::REALISTIC);
         glPopMatrix();
     }
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_TEXTURE_2D);
 }
 
 void SolarSystem::draw_orbit_view() {
+    glScalef(0.5,0.5,0);
+    glTranslatef(-selected_planet->position.x, selected_planet->position.z, 0);
+
     //Vertical flip mapping XZ plane to xy screen coordinates.
     glScalef(1.0f, -1.0f, 1.0f);
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -89,16 +92,43 @@ void SolarSystem::draw_orbit_view() {
     }
 }
 
-void SolarSystem::draw_zoomed_in_view() {
-    draw_realistic_view();
+void SolarSystem::draw_scanning_view() {
+    gluLookAt(probe.position.x, probe.position.y, probe.position.z,
+              selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
+              0.0f, 1.0f, 0.0f);
+
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CULL_FACE);
+//    glEnable(GL_LIGHTING);
+//    glEnable(GL_TEXTURE_2D);
+
+    // Sunlight
+    glEnable(GL_LIGHT0);
+    const float sun_position[4] = { 0.0f, 2.0f, 0.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_POSITION, sun_position);
+    const float sun_ambient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_AMBIENT, sun_ambient);
+    const float sun_diffuse[4] = { 1.0f, 1.0f, 0.9f, 1.0f };
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
+
+    // Planets and probe
+    probe.draw(DrawMode::SCANNING);
+    for (Planet* planet : planets) {
+        glPushMatrix();
+            planet->draw(DrawMode::SCANNING);
+        glPopMatrix();
+    }
 }
 
-Planet* SolarSystem::get_selected_planet() {
-    return selected_planet;
+void SolarSystem::draw_surface_view() {
+    selected_planet->draw(DrawMode::SURFACE);
 }
 
 void SolarSystem::set_selected_planet(unsigned char i) {
-    selected_planet->selected = false;
+    if (selected_planet != nullptr) selected_planet->selected = false;
+
     selected_planet = planets[i];
+    probe.set_orbiting_planet(selected_planet);
+
     selected_planet->selected = true;
 }

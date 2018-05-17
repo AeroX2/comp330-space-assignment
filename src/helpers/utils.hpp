@@ -16,7 +16,7 @@
 enum DrawMode {
     REALISTIC,
     ORBIT,
-    ZOOMED_IN,
+    SCANNING,
     SURFACE
 };
 

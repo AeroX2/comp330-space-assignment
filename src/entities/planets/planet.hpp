@@ -10,7 +10,6 @@
 
 #include "helpers/textures.hpp"
 #include "helpers/utils.hpp"
-#include "entities/probe.hpp"
 
 class Planet {
     public:
@@ -24,7 +23,7 @@ class Planet {
         virtual void draw(DrawMode mode);
 
         Vector3 position;
-        float radius;
+        float size;
         float orbit_radius;
 
         float rotation_speed;

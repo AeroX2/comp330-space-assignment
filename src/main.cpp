@@ -138,7 +138,7 @@ void update() {
     solar_system.update();
 }
 
-void setup_realistic_view(Rect window_coordinates, Planet planet) {
+void setup_realistic_view(Rect window_coordinates) {
 	int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
@@ -153,12 +153,12 @@ void setup_realistic_view(Rect window_coordinates, Planet planet) {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(3.0f, 3.0f, 3.0f,
-              planet.position.x, planet.position.y, planet.position.z,
-              0.0f, 1.0f, 0.0f);
+//	gluLookAt(3.0f, 3.0f, 3.0f,
+//              planet.position.x, planet.position.y, planet.position.z,
+//              0.0f, 1.0f, 0.0f);
 }
 
-void setup_orbit_view(Rect window_coordinates, Planet planet) {
+void setup_orbit_view(Rect window_coordinates) {
 	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
@@ -181,11 +181,11 @@ void setup_orbit_view(Rect window_coordinates, Planet planet) {
 	glLoadIdentity();
 
 	//TODO Not correctly working for the orbit view
-    glScalef(0.5,0.5,0);
-	glTranslatef(-planet.position.x, planet.position.z, 0);
+//    glScalef(0.5,0.5,0);
+//	glTranslatef(-planet.position.x, planet.position.z, 0);
 }
 
-void setup_zoomed_in_view(Rect window_coordinates, Planet planet) {
+void setup_zoomed_in_view(Rect window_coordinates) {
 	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
@@ -200,12 +200,9 @@ void setup_zoomed_in_view(Rect window_coordinates, Planet planet) {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(planet.position.x, planet.position.y, planet.position.z+planet.radius+0.3,
-              planet.position.x, planet.position.y, planet.position.z,
-              0.0f, 1.0f, 0.0f);
 }
 
-void setup_surface_view(Rect window_coordinates, Planet planet) {
+void setup_surface_view(Rect window_coordinates) {
 	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
@@ -235,19 +232,27 @@ void redraw() {
     //char temp_string[50];
     //snprintf(temp_string, 50, "FPS: %d", fps);
 
-    Planet selected_planet = *solar_system.get_selected_planet();
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
 
-    setup_realistic_view(viewport1, selected_planet);
+    setup_realistic_view(viewport1);
     solar_system.draw_realistic_view();
 
-    setup_orbit_view(viewport2, selected_planet);
-	solar_system.draw_orbit_view();
+	setup_zoomed_in_view(viewport2);
+    solar_system.draw_scanning_view();
 
-	setup_zoomed_in_view(viewport3, selected_planet);
-	solar_system.draw_zoomed_in_view();
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
 
-	setup_surface_view(viewport4, selected_planet);
-	selected_planet.draw(DrawMode::SURFACE);
+    setup_orbit_view(viewport3);
+    solar_system.draw_orbit_view();
+
+	setup_surface_view(viewport4);
+	solar_system.draw_surface_view();
 
     glutSwapBuffers();
 }
