@@ -30,8 +30,6 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
 
     //TODO This should be configurable
     rotation_speed = 0.01f;
-
-    test = 0;
 }
 
 void Planet::update() {

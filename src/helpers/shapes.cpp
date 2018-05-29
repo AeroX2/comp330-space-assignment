@@ -29,24 +29,9 @@ void Shapes::draw_sphere() {
 }
 
 void Shapes::draw_sphere_custom(int slices, int stacks) {
-	const float radius = 1.0f;
-
-//	static bool compiled = false;
-//	static unsigned int sphereList = glGenLists(1);
-//
-	static GLUquadric* sphereQuadric = gluNewQuadric();
-//
-//	if (!compiled) {
-//		gluQuadricTexture(sphereQuadric, true);
-//		glNewList(sphereList, GL_COMPILE);
-//		glPushMatrix();
-		glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-//		glPopMatrix();
-//		glEndList();
-//		compiled = true;
-//	}
-
-    gluSphere(sphereQuadric, radius, slices, stacks);
+    static GLUquadric* sphereQuadric = gluNewQuadric();
+    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+    gluSphere(sphereQuadric, 1.0f, slices, stacks);
 }
 
 void Shapes::draw_circle() {
@@ -94,9 +79,9 @@ void Shapes::draw_cube() {
 				glVertex3f(-0.5f, -0.5f, -0.5f);
 				glTexCoord2f(0.0f, 1.0f);
 				glVertex3f( 0.5f, -0.5f, -0.5f);
-				glTexCoord2f(1.0f, 0.0f);
-				glVertex3f( 0.5f, -0.5f,  0.5f);
 				glTexCoord2f(0.0f, 0.0f);
+				glVertex3f( 0.5f, -0.5f,  0.5f);
+				glTexCoord2f(1.0f, 0.0f);
 				glVertex3f(-0.5f, -0.5f,  0.5f);
 
 				glNormal3f(0.0f, 0.0f, 1.0f);

@@ -39,8 +39,6 @@ class Planet {
 
         GLuint texture_id;
         std::string name;
-
-        double test;
 };
 
 

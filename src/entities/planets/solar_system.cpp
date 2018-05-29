@@ -45,22 +45,22 @@ void SolarSystem::draw_realistic_view() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
 
 	//TODO Starmap still needs more work
-//    glPushMatrix();
-//        glColor3f(1.0f, 1.0f, 1.0f);
-//        glScalef(100,100,100);
-//
-//        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//
-//        glFrontFace(GL_CW);
-//        glDisable(GL_LIGHTING);
-//            Shapes::draw_cube();
-//        glEnable(GL_LIGHTING);
-//        glFrontFace(GL_CCW);
-//    glPopMatrix();
+    glPushMatrix();
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glScalef(100,100,100);
+
+        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glFrontFace(GL_CW);
+        glDisable(GL_LIGHTING);
+            Shapes::draw_cube();
+        glEnable(GL_LIGHTING);
+        glFrontFace(GL_CCW);
+    glPopMatrix();
 
 	// Planets and probe
     probe.draw(DrawMode::REALISTIC);
