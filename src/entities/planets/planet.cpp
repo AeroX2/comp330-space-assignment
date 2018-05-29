@@ -30,6 +30,8 @@ Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_sp
 
     //TODO This should be configurable
     rotation_speed = 0.01f;
+
+    test = 0;
 }
 
 void Planet::update() {
@@ -63,6 +65,9 @@ void Planet::draw(DrawMode mode) {
             Shapes::draw_sphere();
             break;
         case ORBIT:
+            glLineWidth(1);
+            glColor3ub(255,255,255);
+
             if (selected) {
                 glPushMatrix();
                     //Draw the orbit
@@ -78,6 +83,7 @@ void Planet::draw(DrawMode mode) {
             Utils::draw_string(name);
             break;
         case SCANNING:
+            glLineWidth(1);
             glTranslatef(position.x, position.y, position.z);
             glRotatef(rotation, 0, 1, 0);
             glScalef(size, size, size);
@@ -88,24 +94,55 @@ void Planet::draw(DrawMode mode) {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-            Utils::set_material(PLANET_MATERIAL_CONFIG);
-            Shapes::draw_sphere();
-
             if (selected) {
+                Utils::set_material(PLANET_MATERIAL_SCANNING_CONFIG);
+                Shapes::draw_sphere();
 
+                //Draw the wireframe
+                glBindTexture(GL_TEXTURE_2D, 0);
+                Utils::set_material(PLANET_MATERIAL_CONFIG);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    //TODO Isolate these to constants.hpp
+                    float scale = scan_amount <= 1.0 ? 1.035f-scan_amount*0.035f : 1.001f;
+                    glScalef(scale, scale, scale);
+                    int cuts = scan_amount*110+10 <= 120 ? (int)(scan_amount*110+10) : 120;
+                    Shapes::draw_sphere_custom(cuts, cuts);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            } else {
+                Utils::set_material(PLANET_MATERIAL_CONFIG);
+                Shapes::draw_sphere();
             }
+
             break;
         case SURFACE:
             glColor3f(1,1,1);
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texture_id);
 
+            //Draw part of the texture
             float x = scan_amount*2-1;
             glBegin(GL_QUADS);
                 glTexCoord2f(scan_amount, 0); glVertex3f(x, -1, 0);
                 glTexCoord2f(scan_amount, 1); glVertex3f(x, 1, 0);
                 glTexCoord2f(0, 1); glVertex3f(-1, 1, 0);
                 glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
+            glEnd();
+
+            //Draw the grid lines
+            glColor3ub(255,128,0);
+            glLineWidth(3);
+
+            float lines = 8.0f;
+            auto lines_int = (int)lines;
+            glBegin(GL_LINES);
+                for (int y = -lines_int; y <= lines_int; y++) {
+                    glVertex2d(-1, y/lines);
+                    glVertex2d(x, y/lines);
+                }
+                for (int x2 = -lines_int; x2 <= x*lines_int; x2++) {
+                    glVertex2d(x2/lines, -1);
+                    glVertex2d(x2/lines, 1);
+                }
             glEnd();
 
             glEnable(GL_BLEND);

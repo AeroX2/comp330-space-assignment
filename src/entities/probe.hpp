@@ -5,6 +5,7 @@
 #ifndef COMP330_SPACE_ASSIGNMENT_PROBE_H
 #define COMP330_SPACE_ASSIGNMENT_PROBE_H
 
+#include <vector>
 #include "planets/planet.hpp"
 #include "helpers/shapes.hpp"
 #include "helpers/utils.hpp"
@@ -19,10 +20,13 @@ class Probe {
 
         Vector3 position;
     private:
+        int current_tick;
+
         float size;
         float orbit_rotation;
 
         Planet* planet;
+        std::vector<Vector3> past_positions;
 };
 
 

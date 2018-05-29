@@ -185,13 +185,13 @@ void setup_orbit_view(Rect window_coordinates) {
 //	glTranslatef(-planet.position.x, planet.position.z, 0);
 }
 
-void setup_zoomed_in_view(Rect window_coordinates) {
+void setup_scanning_view(Rect window_coordinates) {
 	const int viewport_width = window_coordinates.top_right_x - window_coordinates.bottom_left_x;
 	const int viewport_height = window_coordinates.top_right_y - window_coordinates.bottom_left_y;
 	glViewport(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
 	glScissor(window_coordinates.bottom_left_x, window_coordinates.bottom_left_y, viewport_width, viewport_height);
 
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
@@ -240,12 +240,12 @@ void redraw() {
     setup_realistic_view(viewport1);
     solar_system.draw_realistic_view();
 
-	setup_zoomed_in_view(viewport2);
+    setup_scanning_view(viewport2);
     solar_system.draw_scanning_view();
 
+    glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 
     setup_orbit_view(viewport3);
@@ -287,7 +287,7 @@ int main(int argc, char** argv) {
     debug("Setting up OpenGL windows");
 	glutInit(&argc, argv);
 	glClearColor(1.0, 1.0, 1.0, 0.0);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_STENCIL);
 	glutInitWindowSize(WINDOW_INITIAL_WIDTH, WINDOW_INITIAL_HEIGHT);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Mission Control");

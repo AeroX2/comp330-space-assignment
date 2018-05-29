@@ -28,6 +28,27 @@ void Shapes::draw_sphere() {
 	glCallList(sphereList);
 }
 
+void Shapes::draw_sphere_custom(int slices, int stacks) {
+	const float radius = 1.0f;
+
+//	static bool compiled = false;
+//	static unsigned int sphereList = glGenLists(1);
+//
+	static GLUquadric* sphereQuadric = gluNewQuadric();
+//
+//	if (!compiled) {
+//		gluQuadricTexture(sphereQuadric, true);
+//		glNewList(sphereList, GL_COMPILE);
+//		glPushMatrix();
+		glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+//		glPopMatrix();
+//		glEndList();
+//		compiled = true;
+//	}
+
+    gluSphere(sphereQuadric, radius, slices, stacks);
+}
+
 void Shapes::draw_circle() {
 	const float sides = 128.0f;
 	const float step = (2.0f * PI) / sides;

@@ -11,6 +11,7 @@ class Shapes {
 
     public:
         static void draw_sphere();
+        static void draw_sphere_custom(int slices, int stacks);
         static void draw_circle();
         static void draw_cube();
 };

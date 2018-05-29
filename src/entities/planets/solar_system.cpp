@@ -35,11 +35,6 @@ void SolarSystem::draw_realistic_view() {
               selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
               0.0f, 1.0f, 0.0f);
 
-//	glEnable(GL_DEPTH_TEST);
-//	glEnable(GL_CULL_FACE);
-//	glEnable(GL_LIGHTING);
-//	glEnable(GL_TEXTURE_2D);
-
 	// Sunlight
 	glEnable(GL_LIGHT0);
 	const float sun_position[4] = { 0.0f, 2.0f, 0.0f, 1.0f };
@@ -96,11 +91,6 @@ void SolarSystem::draw_scanning_view() {
     gluLookAt(probe.position.x, probe.position.y, probe.position.z,
               selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
               0.0f, 1.0f, 0.0f);
-
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_TEXTURE_2D);
 
     // Sunlight
     glEnable(GL_LIGHT0);

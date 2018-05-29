@@ -24,6 +24,7 @@ const long CLOCK_PER_SEC = 1000000;
 
 //Diffuse{RGB},Specular{RGB},Shininess,Reflection{RGB}
 #define PLANET_MATERIAL_CONFIG 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f
+#define PLANET_MATERIAL_SCANNING_CONFIG 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 100.0f, 0.0f, 0.0f, 0.0f
 
 //Texture,Size,Orbit Radius,Orbit Speed,Name
 #define SATURN_CONFIG    Texture::SATURN,    0.65,          0,    0,     "Saturn"
@@ -38,12 +39,14 @@ const long CLOCK_PER_SEC = 1000000;
 const float SATURN_RING_SCALE = 2.5f;
 
 const float PROBE_SIZE = 0.05f;
-const float PROBE_ORBIT_DISTANCE = 0.1f;
+const float PROBE_ORBIT_DISTANCE = 1.5f;
 const float PROBE_ORBIT_SPEED = 0.001f;
+const int PROBE_RECORD_TICKOVER = 10;
 
 //TODO Scan speed should probably be based upon probe speed
 const float SCAN_SPEED = 0.001f;
 #define SCAN_LINE_COLOR 0,0.8,0
+#define SCANNING_WIREFRAME_SCALE 1.001f,1.001f,1.001f
 const float SCAN_LINE_INNER_TRANSPARENCY = 0.95f;
 const float SCAN_LINE_OUTER_TRANSPARENCY = 0.3f;
 
