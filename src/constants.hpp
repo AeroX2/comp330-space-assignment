@@ -35,10 +35,11 @@ const long CLOCK_PER_SEC = 1000000;
 #define TITAN_CONFIG     Texture::TITAN,     0.80f / 3.0f,  8.0,  0.080, "Titan"
 #define IAPETUS_CONFIG   Texture::IAPETUS,   0.50f / 3.0f,  21.0, 0.070, "Iapetus"
 
+const int STAR_AMOUNT = 1000;
 const float STAR_DISTANCE = 50.0f;
 const float SATURN_RING_SCALE = 2.5f;
 
-const float PROBE_SIZE = 0.05f;
+const float PROBE_SIZE = 0.03f;
 const float PROBE_ORBIT_DISTANCE = 0.1f;
 const float PROBE_ORBIT_SPEED = 0.001f;
 

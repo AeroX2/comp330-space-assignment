@@ -20,7 +20,7 @@ void SolarSystem::init() {
     planets.push_back(new Planet(IAPETUS_CONFIG));
     planets.push_back(new Saturn());
 
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < STAR_AMOUNT; i++) {
 		// uniform random cartesian stars inside cube
 		float x = Utils::random_clamped();
 		float y = Utils::random_clamped();
@@ -52,6 +52,21 @@ void SolarSystem::draw_realistic_view() {
               selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
               0.0f, 1.0f, 0.0f);
 
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+
+	glPointSize(1.0);
+	glBegin(GL_POINTS);
+		for (Vector3 star : stars) {
+			float brightness = Utils::random_range_float(0.5, 1);
+			glColor3f(brightness,brightness,brightness);
+			glVertex3f(star.x,star.y,star.z);
+		}
+	glEnd();
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_TEXTURE_2D);
+
 	// Sunlight
 	glEnable(GL_LIGHT0);
 	const float sun_position[4] = { 0.0f, 2.0f, 0.0f, 1.0f };
@@ -60,23 +75,6 @@ void SolarSystem::draw_realistic_view() {
 	glLightfv(GL_LIGHT0, GL_AMBIENT, sun_ambient);
 	const float sun_diffuse[4] = { 1.0f, 1.0f, 0.9f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
-
-	//glDepthFunc(GL_LEQUAL);
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_ONE,GL_ONE);
-
-	glDisable(GL_LIGHTING);
-	glPointSize(2.0);
-	glBegin(GL_POINTS);
-		for (Vector3 star : stars) {
-			glColor3f(1,1,1);
-			glVertex3f(star.x,star.y,star.z);
-		}
-	glEnd();
-	glPointSize(1.0);
-	glEnable(GL_LIGHTING);
-
-	//glDisable(GL_BLEND);
 
 	// Planets and probe
     probe.draw(DrawMode::REALISTIC);
