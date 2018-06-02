@@ -7,8 +7,8 @@
 
 #include <vector>
 #include "planets/planet.hpp"
-#include "helpers/shapes.hpp"
-#include "helpers/utils.hpp"
+#include "../helpers/shapes.hpp"
+#include "../helpers/utils.hpp"
 
 class Probe {
     public:

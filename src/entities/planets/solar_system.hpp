@@ -9,9 +9,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "constants.hpp"
-#include "helpers/utils.hpp"
-#include "entities/probe.hpp"
+#include "../../constants.hpp"
+#include "../../helpers/utils.hpp"
+#include "../probe.hpp"
 #include "planet.hpp"
 
 class SolarSystem {
@@ -27,6 +27,7 @@ class SolarSystem {
         void draw_surface_view();
     private:
         std::vector<Planet*> planets;
+        std::vector<Vector3> stars;
 
         Planet* selected_planet;
         Probe probe;

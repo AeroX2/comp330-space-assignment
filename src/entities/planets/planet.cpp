@@ -6,8 +6,8 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#include "helpers/utils.hpp"
-#include "helpers/shapes.hpp"
+#include "../../helpers/utils.hpp"
+#include "../../helpers/shapes.hpp"
 #include "planet.hpp"
 
 Planet::Planet(Texture texture, float radius, float orbit_radius, float orbit_speed, std::string name) {

@@ -5,7 +5,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "constants.hpp"
+#include "../constants.hpp"
 
 class Shapes {
 
