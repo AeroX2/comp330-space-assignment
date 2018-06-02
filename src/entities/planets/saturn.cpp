@@ -2,7 +2,7 @@
 // Created by James Ridey on 12/05/2018.
 //
 
-#include <helpers/shapes.hpp>
+#include "../../helpers/shapes.hpp"
 #include "saturn.hpp"
 
 Saturn::Saturn() : Planet(SATURN_CONFIG) {

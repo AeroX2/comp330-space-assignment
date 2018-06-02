@@ -8,8 +8,8 @@
 
 #include <GL/gl.h>
 
-#include "helpers/textures.hpp"
-#include "helpers/utils.hpp"
+#include "../../helpers/textures.hpp"
+#include "../../helpers/utils.hpp"
 
 class Planet {
     public:

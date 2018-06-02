@@ -5,8 +5,8 @@
 #include <GL/freeglut.h>
 #include <GL/glext.h>
 
-#include "helpers/shapes.hpp"
-#include "helpers/textures.hpp"
+#include "../../helpers/shapes.hpp"
+#include "../../helpers/textures.hpp"
 #include "solar_system.hpp"
 #include "saturn.hpp"
 
@@ -19,6 +19,23 @@ void SolarSystem::init() {
     planets.push_back(new Planet(TITAN_CONFIG));
     planets.push_back(new Planet(IAPETUS_CONFIG));
     planets.push_back(new Saturn());
+
+	for (int i = 0; i < 1000; i++) {
+		// uniform random cartesian stars inside cube
+		float x = Utils::random_clamped();
+		float y = Utils::random_clamped();
+		float z = Utils::random_clamped();
+
+		float d = sqrt((x*x)+(y*y)+(z*z));
+		if (d < 1e-3) continue;
+
+		d = STAR_DISTANCE/d;
+		x *= d;
+		y *= d;
+		z *= d;
+
+		stars.push_back({x,y,z});
+	}
 
     set_selected_planet(0);
 }
@@ -35,11 +52,6 @@ void SolarSystem::draw_realistic_view() {
               selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
               0.0f, 1.0f, 0.0f);
 
-//	glEnable(GL_DEPTH_TEST);
-//	glEnable(GL_CULL_FACE);
-//	glEnable(GL_LIGHTING);
-//	glEnable(GL_TEXTURE_2D);
-
 	// Sunlight
 	glEnable(GL_LIGHT0);
 	const float sun_position[4] = { 0.0f, 2.0f, 0.0f, 1.0f };
@@ -49,23 +61,22 @@ void SolarSystem::draw_realistic_view() {
 	const float sun_diffuse[4] = { 1.0f, 1.0f, 0.9f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_diffuse);
 
-	//TODO Starmap still needs more work
-//    glPushMatrix();
-//        glColor3f(1.0f, 1.0f, 1.0f);
-//        glScalef(100,100,100);
-//
-//        glBindTexture(GL_TEXTURE_2D, Textures::get_texture_id(Texture::STARMAP));
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//
-//        glFrontFace(GL_CW);
-//        glDisable(GL_LIGHTING);
-//            Shapes::draw_cube();
-//        glEnable(GL_LIGHTING);
-//        glFrontFace(GL_CCW);
-//    glPopMatrix();
+	//glDepthFunc(GL_LEQUAL);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_ONE,GL_ONE);
+
+	glDisable(GL_LIGHTING);
+	glPointSize(2.0);
+	glBegin(GL_POINTS);
+		for (Vector3 star : stars) {
+			glColor3f(1,1,1);
+			glVertex3f(star.x,star.y,star.z);
+		}
+	glEnd();
+	glPointSize(1.0);
+	glEnable(GL_LIGHTING);
+
+	//glDisable(GL_BLEND);
 
 	// Planets and probe
     probe.draw(DrawMode::REALISTIC);
@@ -96,11 +107,6 @@ void SolarSystem::draw_scanning_view() {
     gluLookAt(probe.position.x, probe.position.y, probe.position.z,
               selected_planet->position.x, selected_planet->position.y, selected_planet->position.z,
               0.0f, 1.0f, 0.0f);
-
-//    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_TEXTURE_2D);
 
     // Sunlight
     glEnable(GL_LIGHT0);
